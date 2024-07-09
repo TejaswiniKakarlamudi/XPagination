@@ -2,24 +2,26 @@ import { useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
-  let [data, setData] = useState([]);
-  let [currentPage, setCurrentPage] = useState(1);
+  const [data, setData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  async function init(api) {
+  async function fetchData(api) {
     try {
       let response = await fetch(api);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
       let datas = await response.json();
-      return datas;
+      setData(datas);
     } catch (error) {
       alert('Error: ' + error.message);
-      return [];
     }
   }
 
   useEffect(() => {
-    let api = 'https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json';
-    init(api).then(d => setData(d));
+    const api = 'https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json';
+    fetchData(api);
   }, []);
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -43,7 +45,6 @@ function App() {
   return (
     <div className="App">
       <h1>Employee Data Table</h1>
-
       <table>
         <thead>
           <tr>
@@ -64,13 +65,12 @@ function App() {
           ))}
         </tbody>
       </table>
-
       <div className="pagination">
         <button onClick={prevPage} disabled={currentPage === 1}>
           Previous
         </button>
         <span>
-          {currentPage} 
+          {currentPage}
         </span>
         <button onClick={nextPage} disabled={currentPage === totalPages}>
           Next
