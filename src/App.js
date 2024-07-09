@@ -5,22 +5,24 @@ function App() {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-
+  const [fetched, setFetched] = useState(false);
   async function fetchData(api) {
     try {
       let response = await fetch(api);
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error('failed to fetch data');
       }
       let datas = await response.json();
       setData(datas);
+      setFetched(true);
     } catch (error) {
-      throw new error('failed to fetch data');
+      alert('failed to fetch data');
+      setFetched(false);
     }
   }
 
   useEffect(() => {
-    const api = 'https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json';
+    const api = 'https://geektrus.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json';
     fetchData(api);
   }, []);
 
@@ -55,27 +57,35 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {currentItems.map((d) => (
-            <tr key={d.id}>
-              <td>{d.id}</td>
-              <td>{d.name}</td>
-              <td>{d.email}</td>
-              <td>{d.role}</td>
+        {fetched ? (
+            currentItems.map((d) => (
+              <tr key={d.id}>
+                <td>{d.id}</td>
+                <td>{d.name}</td>
+                <td>{d.email}</td>
+                <td>{d.role}</td>
+              </tr>
+            ))
+          ) : (
+            <tr >
+              <td style={{textAlign:'centre'}}>Failed to fetch data</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
-      <div className="pagination">
-        <button onClick={prevPage} disabled={currentPage === 1}>
+      {fetched? (<div className="pagination">
+        <button onClick={prevPage} >
+        {/* disabled={currentPage === 1} */}
           Previous
         </button>
         <span>
           {currentPage}
         </span>
-        <button onClick={nextPage} disabled={currentPage === totalPages}>
+        <button onClick={nextPage} >
+        {/* disabled={currentPage === totalPages} */}
           Next
         </button>
-      </div>
+      </div>):(<></>)}
     </div>
   );
 }
