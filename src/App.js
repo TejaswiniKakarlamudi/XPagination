@@ -22,7 +22,7 @@ function App() {
   }
 
   useEffect(() => {
-    const api = 'https://geektrus.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json';
+    const api = 'https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json';
     fetchData(api);
   }, []);
 
