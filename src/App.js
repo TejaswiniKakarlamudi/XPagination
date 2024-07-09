@@ -15,7 +15,7 @@ function App() {
       let datas = await response.json();
       setData(datas);
     } catch (error) {
-      alert('Error: ' + error.message);
+      throw new error('failed to fetch data');
     }
   }
 
@@ -54,7 +54,7 @@ function App() {
             <th>Role</th>
           </tr>
         </thead>
-        {/* <tbody> */}
+        <tbody>
           {currentItems.map((d) => (
             <tr key={d.id}>
               <td>{d.id}</td>
@@ -63,7 +63,7 @@ function App() {
               <td>{d.role}</td>
             </tr>
           ))}
-        {/* </tbody> */}
+        </tbody>
       </table>
       <div className="pagination">
         <button onClick={prevPage} disabled={currentPage === 1}>
